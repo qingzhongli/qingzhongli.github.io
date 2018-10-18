@@ -7,17 +7,17 @@ title: jvm之判断ygc耗时和频率
 
 **Step1、找出所查java应用的进程编号**
 
-```bash
+```
 jps -mlv | grep 应用名称 # 或者 ps -ef | grep 应用名称
 ```
 
-```bash
+```
 20848 com.lqz.test.Main -Dprogram=APP_/home/lqz/test/bin/.. -Xms4G -Xmx4G
 ```
 
 **Step2、查看应用的gc概况**
 
-```bash
+```
 $ jstat -gcutil 20848 250 10
   S0     S1     E      O      P     YGC     YGCT    FGC    FGCT     GCT   
  56.25   0.00  52.10  34.51  39.51 469204 5176.817   549  111.738 5288.555
@@ -35,7 +35,7 @@ $
 
 jstat 详细用法：[jstat - Java Virtual Machine Statistics Monitoring Tool](https://docs.oracle.com/javase/7/docs/technotes/tools/share/jstat.html)，更多的java工具：[JDK Tools and Utilities](https://docs.oracle.com/javase/7/docs/technotes/tools)，更多jdk文档，请进入[传送门](https://docs.oracle.com/en)。
 
-```bash
+```
 jstat -<option> [-t] [-h<lines>] <vmid> [<interval> [<count>]
 ```
 
