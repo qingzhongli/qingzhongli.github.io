@@ -3,10 +3,8 @@ layout: post
 title: hadoop之伪分布式搭建
 ---
 
-# 下载安装包
-
+## 下载安装包
 [Apache Hadoop](https://hadoop.apache.org/releases.html) 官网下载hadoop安装包 hadoop-3.1.1，并解压。
-
 ```sh
 [root@d1 local]# pwd
 /usr/local
@@ -15,7 +13,7 @@ title: hadoop之伪分布式搭建
 [root@d1 local]# ln -s hadoop-3.1.1 hadoop
 ```
 
-# 修改配置
+## 修改配置
 
 修改解压后的目录中的文件夹etc/hadoop下的xml配置文件（如果文件不存在，则自己创建）
 
@@ -97,7 +95,7 @@ yarn-site.xml：
 </configuration>
 ```
 
-# 启动服务
+## 启动服务
 
 格式化HDFS：
 
@@ -117,7 +115,7 @@ sbin/start-dfs.sh
 sbin/start-yarn.sh
 ```
 
-# 验证是否启动成功
+## 验证是否启动成功
 
 ```sh
 [root@d1 hadoop]# jps
@@ -130,4 +128,4 @@ sbin/start-yarn.sh
 [root@d1 hadoop]#
 ```
 
-参照：http://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/SingleCluster.html
+参照：[Hadoop: Setting up a Single Node Cluster](http://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/SingleCluster.html)
