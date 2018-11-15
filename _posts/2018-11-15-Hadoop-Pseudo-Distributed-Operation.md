@@ -10,11 +10,8 @@ title: hadoop之伪分布式搭建
 ```sh
 [root@d1 local]# pwd
 /usr/local
-
 [root@d1 local]# tar -zxvf hadoop-3.1.1
-
 [root@d1 local]# chown root:root -R hadoop-3.1.1
-
 [root@d1 local]# ln -s hadoop-3.1.1 hadoop
 ```
 
@@ -89,7 +86,7 @@ core-site.xml（其中“d1”是在/etc/hosts中设置的host，如果未设置
 
 yarn-site.xml：
 
-```
+```sh
 [root@d1 hadoop]# vi etc/hadoop/yarn-site.xml
 <?xml version="1.0"?>
 <configuration>
@@ -104,25 +101,25 @@ yarn-site.xml：
 
 格式化HDFS：
 
-```
+```sh
 bin/hdfs namenode -format
 ```
 
 启动HDFS：
 
-```
+```sh
 sbin/start-dfs.sh
 ```
 
 启动YARN：
 
-```
+```sh
 sbin/start-yarn.sh
 ```
 
 # 验证是否启动成功
 
-```
+```sh
 [root@d1 hadoop]# jps
 21697 Jps
 20612 SecondaryNameNode
