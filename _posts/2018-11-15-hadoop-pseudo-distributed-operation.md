@@ -2,7 +2,27 @@
 layout: post
 title: hadoop之伪分布式搭建
 ---
+## 安装JDK
+```sh
+$ rpm jdk-8u181-linux-x64.rpm
+```
 
+## 配置hosts
+```sh
+[root@d1 hadoop-2.9.2]# vi /etc/hosts
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+192.168.92.130 d1
+[root@d1 hadoop-2.9.2]#
+```
+
+## 配置免密登录
+```sh
+$ ssh-keygen -t rsa
+$ cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys
+$ ssh d1 # 验证时候可以无密登录
+```
 ## 下载安装包
 [Apache Hadoop](https://hadoop.apache.org/releases.html) 官网下载hadoop安装包 hadoop-3.1.1，并解压。
 ```sh
@@ -12,7 +32,6 @@ title: hadoop之伪分布式搭建
 [root@d1 local]# chown root:root -R hadoop-3.1.1
 [root@d1 local]# ln -s hadoop-3.1.1 hadoop
 ```
-
 ## 修改配置
 
 修改解压后的目录中的文件夹etc/hadoop下的xml配置文件（如果文件不存在，则自己创建）
@@ -98,11 +117,9 @@ yarn-site.xml：
 ## 启动服务
 
 格式化HDFS：
-
 ```sh
 bin/hdfs namenode -format
 ```
-
 启动HDFS：
 
 ```sh
@@ -127,5 +144,11 @@ sbin/start-yarn.sh
 20414 DataNode
 [root@d1 hadoop]#
 ```
-
-参照：[Hadoop: Setting up a Single Node Cluster](http://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/SingleCluster.html)
+## 常见错误
+若启动报本地类库无法加载，如下所示：
+```
+2018-11-21 18:28:37,260 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+```
+解决办法参照：[hadoop环境搭建常见问题](https://qingzhongli.com/hadoop-setup-common-problems)
+## References
+[Hadoop: Setting up a Single Node Cluster](http://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/SingleCluster.html)
