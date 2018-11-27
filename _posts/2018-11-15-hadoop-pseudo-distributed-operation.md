@@ -2,6 +2,9 @@
 layout: post
 title: hadoop之伪分布式搭建
 ---
+## 整体流程
+安装jdk、配置hosts、配置免密、下载hadoop安装文件、配置hadoop、启动验证
+
 ## 安装JDK
 ```sh
 $ rpm jdk-8u181-linux-x64.rpm
@@ -9,12 +12,12 @@ $ rpm jdk-8u181-linux-x64.rpm
 
 ## 配置hosts
 ```sh
-[root@d1 hadoop-2.9.2]# vi /etc/hosts
+[root@d1 hadoop-3.1.1]# vi /etc/hosts
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 
 192.168.92.130 d1
-[root@d1 hadoop-2.9.2]#
+[root@d1 hadoop-3.1.1]#
 ```
 
 ## 配置免密登录
