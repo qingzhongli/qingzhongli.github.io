@@ -178,6 +178,79 @@ default
 Time taken: 8.455 seconds, Fetched: 1 row(s)
 hive>
 ```
+#### 4.6 hiveserver2 的使用
+>HiveServer2 (HS2) is a server interface that enables remote clients to execute queries against Hive and retrieve the results (a more detailed intro [here](https://cwiki.apache.org/confluence/display/Hive/HiveServer2+Overview)). The current implementation, based on Thrift RPC, is an improved version of HiveServer and supports multi-client concurrency and authentication. It is designed to provide better support for open API clients like JDBC and ODBC.
+
+启动hiveserver2
+
+```
+$HIVE_HOME/bin/hiveserver2 # 或者 $HIVE_HOME/bin/hive --service hiveserver2
+```
+
+使用beeline连接
+
+本例中没有使用用户名和密码，直接回车即可。
+```
+$ ${HIVE_HOME}/bin/beeline
+beeline> !connect jdbc:hive2://elk1:10000
+Connecting to jdbc:hive2://elk1:10000
+Enter username for jdbc:hive2://elk1:10000:
+Enter password for jdbc:hive2://elk1:10000:
+0: jdbc:hive2://elk1:10000> show tables;
+INFO  : Compiling command(queryId=root_20200417085546_6d6a4943-74e6-47cf-9df0-b44b57a57841): show tables
+INFO  : Concurrency mode is disabled, not creating a lock manager
+INFO  : Semantic Analysis Completed (retrial = false)
+INFO  : Returning Hive schema: Schema(fieldSchemas:[FieldSchema(name:tab_name, type:string, comment:from deserializer)], properties:null)
+INFO  : Completed compiling command(queryId=root_20200417085546_6d6a4943-74e6-47cf-9df0-b44b57a57841); Time taken: 1.111 seconds
+INFO  : Concurrency mode is disabled, not creating a lock manager
+INFO  : Executing command(queryId=root_20200417085546_6d6a4943-74e6-47cf-9df0-b44b57a57841): show tables
+INFO  : Starting task [Stage-0:DDL] in serial mode
+INFO  : Completed executing command(queryId=root_20200417085546_6d6a4943-74e6-47cf-9df0-b44b57a57841); Time taken: 0.065 seconds
+INFO  : OK
+INFO  : Concurrency mode is disabled, not creating a lock manager
++-----------+
+| tab_name  |
++-----------+
++-----------+
+No rows selected (1.542 seconds)
+0: jdbc:hive2://elk1:10000>
+```
+使用hiveserver2常见错误
+
+1、Error: Could not establish connection to jdbc:hive2://elk1:10000: Required field 'serverProtocolVersion' is unset
+
+2、Error: Could not open client transport with JDBC Uri: jdbc:hive2://elk1:10000: Failed to open new session: java.lang.RuntimeException: org.apache.hadoop.ipc.RemoteException(org.apache.hadoop.security.authorize.AuthorizationException): User: root is not allowed to impersonate anonymous (state=08S01,code=0)
+
+解决方案一：方法修改$HADOOP_HOME/etc/hadoop/core-site.xml，增加如下配置，然后重启hadoop（本例中hadoop的启停用户均为root）：
+```
+<!-- username 改为报错信息中的用户名，本例中为root -->
+<property>
+  <name>hadoop.proxyuser.username.groups</name>
+  <value>*</value>
+</property>
+<property>
+  <name>hadoop.proxyuser.username.hosts</name>
+  <value>*</value>
+</property>
+```
+
+解决方案二：方法修改$HIVE_HOME/conf/hive-site.xml，增加如下配置，然后重启hiveserver2：
+```
+<property>
+  <name>hive.server2.enable.doAs</name>
+  <value>FALSE</value>
+  <description>
+    Setting this property to true will have HiveServer2 execute
+    Hive operations as the user making the calls to it.
+  </description>
+</property>
+```
+
+参照：
+
+[Proxy user - Superusers Acting On Behalf Of Other Users](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/Superusers.html)
+
+[HiveServer2 User Impersonation Issues](https://www.stefaanlippens.net/hiveserver2-impersonation-issues.html)
 
 ## 5 hive源码调试
 ### 5.1 hive cli启动debug模式
@@ -191,3 +264,20 @@ Listening for transport dt_socket at address: 8000
 IntelliJ -> Open -> pom.xml of hive source -> Run -> Debug… -> Edit Configurations… -> + -> Remote
 ![avatar](../images/blog/2018-11-27-hive-source-read-local-env-setup-1.png)
 当我们配置好Name、Host、Port后，点击debug，则此时会连接localhost的8000端口，真正开启 hive cli，对应的源码入口是 `org.apache.hadoop.hive.cli.CliDriver#main`，待hive cli启动成功后，可以输入hql进行代码调试了。
+
+## 6 常见错误
+1、使用hive启动时报错，即`java.lang.NoSuchMethodError: com.google.common.base.Preconditions.checkArgument(ZLjava/lang/String;Ljava/lang/Object;)V`
+解决方法如下：
+```
+# ls ../lib/guava-19.0.jar
+../lib/guava-19.0.jar
+# ls $HADOOP_HOME/share/hadoop/common/lib/guava-27.0-jre.jar  
+/home/liqingzhong/apps/hadoop-3.1.3/share/hadoop/common/lib/guava-27.0-jre.jar
+# rm ../lib/guava-19.0.jar
+# cp $HADOOP_HOME/share/hadoop/common/lib/guava-27.0-jre.jar  ../lib/
+```
+解决办法参照：[hive环境搭建提示: java.lang.NoSuchMethodError: com.google.common.base.Preconditions.checkArgument](https://blog.csdn.net/GQB1226/article/details/102555820)
+## 7 参照
+[Hive - Installation](https://www.tutorialspoint.com/hive/hive_installation.html)
+
+[Setting Up HiveServer2](https://cwiki.apache.org/confluence/display/Hive/Setting+Up+HiveServer2)
