@@ -1,6 +1,8 @@
+---
 layout: post
 title: elasticsearch之索引模板
 ---
+
 ## 索引模板简介
 
 索引模板是创建索引的一种方式。将数据写入指定索引时，如果该索引不存在，则根据索引名称能匹配相应索引模板话，会根据模板的配置建立索引。更多介绍请查看官网的[Index templates](https://www.elastic.co/guide/en/elasticsearch/reference/master/index-templates.html)
