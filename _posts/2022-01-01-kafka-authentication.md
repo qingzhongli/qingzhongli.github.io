@@ -1,4 +1,4 @@
-#Kafka三种认证模式
+# Kafka三种认证模式
 ## 使用kerberos认证
 ```
 bootstrap.servers=hadoop01.com:9092,hadoop02.com:9092,hadoop03.com:9092,hadoop04.com:9092
