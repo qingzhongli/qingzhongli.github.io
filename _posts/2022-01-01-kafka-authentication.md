@@ -1,3 +1,7 @@
+---
+layout: post
+title: Kafka三种认证模式
+---
 # Kafka三种认证模式
 ## 使用kerberos认证
 ```
